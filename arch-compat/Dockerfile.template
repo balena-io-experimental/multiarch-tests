@@ -1,0 +1,38 @@
+ARG TAG="latest"
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+FROM balenalib/rpi-debian:${TAG} AS rpi-debian
+FROM balenalib/rpi-debian:${TAG} AS armv7hf-debian
+FROM balenalib/armv7hf-debian:${TAG} AS aarch64-debian
+FROM balenalib/i386-debian:${TAG} AS i386-debian
+FROM balenalib/i386-debian:${TAG} AS amd64-debian
+FROM ${BALENA_ARCH}-debian
+
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(uname -m)" = "aarch64"  ;; \
+    rpi) test "$(uname -m)" = "armv6l" ;; \
+    armv7hf) test "$(uname -m)" = "armv7l" ;; \
+    amd64) test "$(uname -m)" = "x86_64" ;; \
+    i386) test "$(uname -m)" = "x86_64" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac
+
+FROM balenalib/rpi-alpine:${TAG} AS rpi-alpine
+FROM balenalib/rpi-alpine:${TAG} AS armv7hf-alpine
+FROM balenalib/armv7hf-alpine:${TAG} AS aarch64-alpine
+FROM balenalib/i386-alpine:${TAG} AS i386-alpine
+FROM balenalib/i386-alpine:${TAG} AS amd64-alpine
+FROM ${BALENA_ARCH}-debian
+
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(uname -m)" = "aarch64"  ;; \
+    rpi) test "$(uname -m)" = "armv6l" ;; \
+    armv7hf) test "$(uname -m)" = "armv7l" ;; \
+    amd64) test "$(uname -m)" = "x86_64" ;; \
+    i386) test "$(uname -m)" = "x86_64" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac

@@ -1,0 +1,46 @@
+ARG TAG="latest"
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+FROM balenalib/${BALENA_ARCH}-debian:${TAG} AS debian
+
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(dpkg --print-architecture)" = "arm64"  ;; \
+    rpi) test "$(dpkg --print-architecture)" = "armhf" ;; \
+    armv7hf) test "$(dpkg --print-architecture)" = "armhf" ;; \
+    amd64) test "$(dpkg --print-architecture)" = "amd64" ;; \
+    i386) test "$(dpkg --print-architecture)" = "i386" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(uname -m)" = "aarch64"  ;; \
+    rpi) test "$(uname -m)" = "armv6l" ;; \
+    armv7hf) test "$(uname -m)" = "armv7l" ;; \
+    amd64) test "$(uname -m)" = "x86_64" ;; \
+    i386) test "$(uname -m)" = "i686" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac
+
+FROM balenalib/${BALENA_ARCH}-alpine:${TAG} AS alpine
+
+ARG BALENA_ARCH=%%BALENA_ARCH%%
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(apk --print-arch)" = "aarch64"  ;; \
+    rpi) test "$(apk --print-arch)" = "armhf" ;; \
+    armv7hf) test "$(apk --print-arch)" = "armv7" ;; \
+    amd64) test "$(apk --print-arch)" = "x86_64" ;; \
+    i386) test "$(apk --print-arch)" = "x86" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac
+
+RUN set -x ; case "${BALENA_ARCH}" in \
+    aarch64) test "$(uname -m)" = "aarch64"  ;; \
+    rpi) test "$(uname -m)" = "armv6l" ;; \
+    armv7hf) test "$(uname -m)" = "armv7l" ;; \
+    amd64) test "$(uname -m)" = "x86_64" ;; \
+    i386) test "$(uname -m)" = "i686" ;; \
+    *) echo "Unsupported architecture" && exit 1 ;; \
+    esac

@@ -1,6 +1,16 @@
 version: '2'
 services:
-  alpine:
-    build: alpine
-  debian:
-    build: debian
+  balenalib-v1:
+    build: 
+      context: balenalib
+      args:
+        - TAG=run-20191223
+  balenalib-v2:
+    build: 
+      context: balenalib
+      args:
+        - TAG=run
+  multiarch:
+    build: multiarch
+  arch-compat:
+    build: arch-compat
